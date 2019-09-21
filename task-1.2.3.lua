@@ -2,7 +2,7 @@
 -- Task can be solved without aproximation, but I'm too lazy for that
 -- Aproximation does the job here, values cleary approach known numbers
 
-local cycles = (...) -- 100 000 is fine, more takes a bit of time. Accurate results at 100 000+
+local cycles = tonumber(arg[1]) -- 100 000 is fine, more takes a bit of time. Accurate results at 100 000+
 print("Doing "..cycles.." cycles...")
 
 local male, female = cycles, 0
