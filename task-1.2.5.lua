@@ -9,7 +9,8 @@ if (type(tonumber(arg[1])) ~= "number") or (type(tonumber(arg[2])) ~= "number") 
   os.exit()
 end
 
-local lcg_config = {a = 0, c = 0, m = 0} -- TODO: choose some good constants
+-- C++11 constants are used for reference
+local lcg_config = {a = 48271, c = 0, m = math.pow(2, 31)-1}
 
 local seed = tonumber(arg[1]) -- Used as a starting point for LCG
 local length = tonumber(arg[2]) -- How many to generate
@@ -25,4 +26,3 @@ for i=1,length do
   x = lcg(x)
   print(x)
 end
-
