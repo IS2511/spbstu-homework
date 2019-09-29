@@ -1,8 +1,10 @@
 
 if (type(tonumber(arg[1])) ~= "number" or type(tonumber(arg[2])) ~= "number") then
+  print("Calculating square root of a number FAST (using binary approximation).")
   print("Usage: "..arg[0].." <number> <accuracy>")
   os.exit()
 end
+
 if tonumber(arg[1]) <= 0 then
   print("Error: "..arg[1].." is not positive or zero")
   os.exit()

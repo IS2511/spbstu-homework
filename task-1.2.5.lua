@@ -5,6 +5,7 @@
 -- zzz: I'm re-generating all my SSH keys
 
 if (type(tonumber(arg[1])) ~= "number") or (type(tonumber(arg[2])) ~= "number") then
+  print("Generating pseudo-random numbers using an LCG. (Using C++11 constants)")
   print("Usage: "..arg[0].." <seed> <count>")
   os.exit()
 end

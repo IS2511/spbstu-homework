@@ -1,5 +1,6 @@
 
 if (type(tonumber(arg[1])) ~= "number") then
+  print("Deduping a random generated table of numbers.")
   print("Usage: "..arg[0].." <count>")
   os.exit()
 end
