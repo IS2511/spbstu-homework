@@ -3,14 +3,30 @@
 
 local ser = require "lib.serialization"
 local deepcopy = require "lib.deepcopy"
+require "lib.BigRat"
 
-if (type(tonumber(arg[1])) ~= "number") then
+if not ( (type(tonumber(arg[1])) == "number") or (type(tonumber(arg[2])) == "number") ) then
   print("Calculating factorial of a number FAST (using factorization).")
-  print("Usage: "..arg[0].." <number>")
+  print("Usage: "..arg[0].." [--big] <number>")
   os.exit()
 end
 
-local num = math.floor(tonumber(arg[1]))
+local num = 0
+local use_big = false
+
+if (type(tonumber(arg[1])) == "number") then
+  num = math.floor(tonumber(arg[1]))
+else
+  num = math.floor(tonumber(arg[2]))
+end
+
+if #arg > 1 then
+  use_big = ( (arg[1] == "--big") or (arg[2] == "--big") )
+end
+
+-- if use_big then
+--   num = BigRat.new(num)
+-- end
 
 function gen_primes(up)
   local _primes = {}
@@ -47,6 +63,9 @@ end
 
 function factorial (x, factor, prime)
   local f = 1
+  if use_big then
+    f = BigRat.new(1)
+  end
   for i=2,num do
     if prime[i] then
       f = f * math.pow(i, factor[i])
@@ -91,10 +110,13 @@ timer3 = os.clock() - timer3
 
 print("Calculated factorial of "..num.." in "..timer3.." seconds")
 print("Total time taken (not including prime generation): "..(timer2+timer3).." seconds")
-print("Result: "..result1)
+print("Result: "..tostring(result1))
 
 
 local result2 = 1
+if use_big then
+  result2 = BigRat.new(1)
+end
 local timer4 = os.clock()
 for i=2,num do
   result2 = result2 * i
@@ -102,4 +124,4 @@ end
 timer4 = os.clock() - timer4
 
 print("\nCalculated factorial (the dumb way) of "..num.." in "..timer4.." seconds")
-print("Result: "..result2)
+print("Result: "..tostring(result2))
