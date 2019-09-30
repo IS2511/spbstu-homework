@@ -125,3 +125,25 @@ timer4 = os.clock() - timer4
 
 print("\nCalculated factorial (the dumb way) of "..num.." in "..timer4.." seconds")
 print("Result: "..tostring(result2))
+
+local diff = (result1 == result2)
+print("\nAre results equal? `"..ser.pack(diff).."`")
+if not diff then
+  local diff_str = ">"
+  if (result1 < result2) then
+    diff_str = "<"
+  end
+  print("result1 "..diff_str.." result2")
+  -- local diff_num = result1 - result2
+  -- local zero = 0
+  -- if use_big then
+  --   zero = BigRat.new(0)
+  -- end
+  -- if diff_num < zero then
+  --   diff_num = diff_num * (-1)
+  -- end
+  -- diff_num = ( diff_num / (result1 + result2) )
+  -- BigRat.simplify(diff_num)
+  -- diff_num = diff_num * 100
+  -- print("Difference: "..tostring(diff_num).." %")
+end
