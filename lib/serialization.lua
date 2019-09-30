@@ -1,7 +1,7 @@
 
 local _dir = (...):match("(.-)[^%.]+$")
 local checkArg = require(_dir .. "checkArg")
-local checkArg = require(_dir .. "table_pack-unpack")
+require(_dir .. "table_pack-unpack")
 
 local serialization = {}
 
