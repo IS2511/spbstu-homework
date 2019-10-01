@@ -5,26 +5,30 @@ local ser = require "lib.serialization"
 local deepcopy = require "lib.deepcopy"
 require "lib.BigRat"
 
-if not ( (type(tonumber(arg[1])) == "number") or (type(tonumber(arg[2])) == "number") or (type(tonumber(arg[3])) == "number") ) then
-  print("Calculating factorial of a number FAST (using factorization).")
-  print("Usage: "..arg[0].."[--result] [--big] <number>")
-  os.exit()
-end
-
+local arg_check = true
 local num = 0
 local use_big = false
 local print_result = false
 
 for i,v in ipairs(arg) do
   if type(tonumber(v)) == "number" then
+    if num ~= 0 then arg_check = false end
     num = math.floor(tonumber(v))
-  end
-  if v == "--big" then
+  elseif v == "--big" then
     use_big = true
-  end
-  if v == "--result" then
+  elseif v == "--result" then
     print_result = true
+  else
+    arg_check = false
   end
+end
+
+if num == 0 then arg_check = false end
+
+if not arg_check then
+  print("Calculating factorial of a number FAST (using factorization).")
+  print("Usage: "..arg[0].." [--result] [--big] <number>")
+  os.exit()
 end
 
 
