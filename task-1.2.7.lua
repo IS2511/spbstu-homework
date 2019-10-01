@@ -5,28 +5,28 @@ local ser = require "lib.serialization"
 local deepcopy = require "lib.deepcopy"
 require "lib.BigRat"
 
-if not ( (type(tonumber(arg[1])) == "number") or (type(tonumber(arg[2])) == "number") ) then
+if not ( (type(tonumber(arg[1])) == "number") or (type(tonumber(arg[2])) == "number") or (type(tonumber(arg[3])) == "number") ) then
   print("Calculating factorial of a number FAST (using factorization).")
-  print("Usage: "..arg[0].." [--big] <number>")
+  print("Usage: "..arg[0].."[--result] [--big] <number>")
   os.exit()
 end
 
 local num = 0
 local use_big = false
+local print_result = false
 
-if (type(tonumber(arg[1])) == "number") then
-  num = math.floor(tonumber(arg[1]))
-else
-  num = math.floor(tonumber(arg[2]))
+for i,v in ipairs(arg) do
+  if type(tonumber(v)) == "number" then
+    num = math.floor(tonumber(v))
+  end
+  if v == "--big" then
+    use_big = true
+  end
+  if v == "--result" then
+    print_result = true
+  end
 end
 
-if #arg > 1 then
-  use_big = ( (arg[1] == "--big") or (arg[2] == "--big") )
-end
-
--- if use_big then
---   num = BigRat.new(num)
--- end
 
 function gen_primes(up)
   local _primes = {}
@@ -79,7 +79,7 @@ local timer1 = os.clock()
 local primes = gen_primes(num)
 timer1 = os.clock() - timer1
 
-print("Generated prime list to "..(num).." in "..timer1.." seconds")
+print("Generated prime list to "..num.." in "..timer1.." seconds")
 -- print(ser.pack(primes, num)
 
 local timer2 = os.clock()
@@ -110,7 +110,9 @@ timer3 = os.clock() - timer3
 
 print("Calculated factorial of "..num.." in "..timer3.." seconds")
 print("Total time taken (not including prime generation): "..(timer2+timer3).." seconds")
-print("Result: "..tostring(result1))
+if print_result then
+  print("Result: "..tostring(result1))
+end
 
 
 local result2 = 1
@@ -124,7 +126,9 @@ end
 timer4 = os.clock() - timer4
 
 print("\nCalculated factorial (the dumb way) of "..num.." in "..timer4.." seconds")
-print("Result: "..tostring(result2))
+if print_result then
+  print("Result: "..tostring(result2))
+end
 
 local diff = (result1 == result2)
 print("\nAre results equal? `"..ser.pack(diff).."`")
@@ -134,16 +138,13 @@ if not diff then
     diff_str = "<"
   end
   print("result1 "..diff_str.." result2")
-  -- local diff_num = result1 - result2
-  -- local zero = 0
-  -- if use_big then
-  --   zero = BigRat.new(0)
-  -- end
-  -- if diff_num < zero then
-  --   diff_num = diff_num * (-1)
-  -- end
-  -- diff_num = ( diff_num / (result1 + result2) )
-  -- BigRat.simplify(diff_num)
-  -- diff_num = diff_num * 100
-  -- print("Difference: "..tostring(diff_num).." %")
+end
+
+if print_result then
+  print("\n\nTime results again:\n")
+  print("Generated prime list to "..num.." in "..timer1.." seconds")
+  print("Factorized from 2 to "..num.." in "..timer2.." seconds")
+  print("Calculated factorial of "..num.." in "..timer3.." seconds")
+  print("Total time taken (not including prime generation): "..(timer2+timer3).." seconds")
+  print("\nCalculated factorial (the dumb way) of "..num.." in "..timer4.." seconds")
 end
