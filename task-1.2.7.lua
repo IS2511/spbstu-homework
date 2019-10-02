@@ -72,7 +72,11 @@ function factorial (x, factor, prime)
   end
   for i=2,num do
     if prime[i] then
-      f = f * (BigRat.new(i)^BigRat.new(factor[i]))
+      if use_big then
+        f = f * (BigRat.new(i)^BigRat.new(factor[i]))
+      else
+        f = f * math.pow(i, factor[i])
+      end
       -- print("["..i.."] "..factor[i].." | "..f)
     end
   end
