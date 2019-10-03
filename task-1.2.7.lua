@@ -32,6 +32,22 @@ if not arg_check then
 end
 
 
+function sieve_Eratosthenes(up)
+  local _primes = {}
+  for i=2,up do
+    _primes[i] = true
+  end
+  for i=2,up do
+    if _primes[i] then
+      for j=i+1,up do
+        _primes[j] = (j%i ~= 0) and _primes[j] -- Faster. Because GC?
+        -- _primes[j] = ((j%i ~= 0) and _primes[j]) or nil
+      end
+    end
+  end
+  return _primes
+end
+
 function gen_primes(up)
   local _primes = {}
   for i=2,up do
@@ -50,7 +66,8 @@ end
 
 function factorize (x, prime)
   local _factors = {}
-  for i=2,num do
+  local i = 2
+  while x ~= 1 do
     if prime[i] then
       _factors[i] = 0
       while (x%i == 0) do
@@ -61,6 +78,7 @@ function factorize (x, prime)
         _factors[i] = nil -- Faster. Why though? Less memory?
       end
     end
+    i = i + 1
   end
   return _factors
 end
@@ -84,11 +102,14 @@ function factorial (x, factor, prime)
 end
 
 local timer1 = os.clock()
+-- We can save some time on prime generation with some clever math
+-- We only need to check up to sqrt(num) (if we don't need factors)
+-- local primes = gen_primes(math.ceil(math.sqrt(num)))
 local primes = gen_primes(num)
 timer1 = os.clock() - timer1
 
 print("Generated prime list to "..num.." in "..timer1.." seconds")
--- print(ser.pack(primes, num)
+-- print(ser.pack(primes, num))
 
 local timer2 = os.clock()
 local factors = {}
