@@ -33,70 +33,74 @@ end
 
 
 function sieve_Eratosthenes(up)
-  local _primes = {}
-  for i=2,up do
-    _primes[i] = true
-  end
-  for i=2,up do
-    if _primes[i] then
-      for j=i+1,up do
-        _primes[j] = (j%i ~= 0) and _primes[j] -- Faster. Because GC?
-        -- _primes[j] = ((j%i ~= 0) and _primes[j]) or nil
+  local _primes = {2}
+  for i=3,up do
+    local prime = true
+    for j,v in ipairs(_primes) do
+      if i%v == 0 then
+        prime = false
       end
+    end
+    if prime then
+      table.insert(_primes, i)
     end
   end
   return _primes
 end
 
-function gen_primes(up)
-  local _primes = {}
-  for i=2,up do
-    _primes[i] = true
-  end
-  for i=2,up do
-    if _primes[i] then
-      for j=i+1,up do
-        _primes[j] = (j%i ~= 0) and _primes[j] -- Faster. Because GC?
-        -- _primes[j] = ((j%i ~= 0) and _primes[j]) or nil
-      end
-    end
-  end
-  return _primes
-end
+-- function sieve_Sundaram(up) -- Slower
+--   local _up = math.ceil((up - 2)/2)
+--   local _primes = {2}
+--   local pre_primes = {}
+--   for i=1,_up do
+--     pre_primes[i] = true
+--   end
+--   for i=1,_up do
+--     for j=1,i do
+-- 			if (i + j + 2*i*j <= up) then
+--         pre_primes[ i + j + 2*i*j ] = false
+--         -- print("["..(i + j + 2*i*j).."] "..((i+j+2*i*j)*2+1))
+--         -- table.insert(_primes, (i+j+2*i*j)*2+1)
+--       end
+--     end
+--   end
+--   for k,v in pairs(pre_primes) do
+--     if v then
+--       table.insert(_primes, k*2+1)
+--     end
+--   end
+--   return _primes
+-- end
 
 function factorize (x, prime)
   local _factors = {}
-  local i = 2
+  local i = 1
   while x ~= 1 do
-    if prime[i] then
-      _factors[i] = 0
-      while (x%i == 0) do
-        x = x/i
-        _factors[i] = _factors[i] + 1
-      end
-      if _factors[i] == 0 then
-        _factors[i] = nil -- Faster. Why though? Less memory?
-      end
+    _factors[prime[i]] = 0
+    while (x%prime[i] == 0) do
+      x = x/prime[i]
+      _factors[prime[i]] = _factors[prime[i]] + 1
+    end
+    if _factors[prime[i]] == 0 then
+      _factors[prime[i]] = nil -- Faster. Why though? Less memory?
     end
     i = i + 1
   end
   return _factors
 end
 
-function factorial (x, factor, prime)
+function factorial (x, factor)
   local f = 1
   if use_big then
     f = BigRat.new(1)
   end
-  for i=2,num do
-    if prime[i] then
-      if use_big then
-        f = f * (BigRat.new(i)^BigRat.new(factor[i]))
-      else
-        f = f * math.pow(i, factor[i])
-      end
-      -- print("["..i.."] "..factor[i].." | "..f)
+  for k,v in pairs(factor) do
+    if use_big then
+      f = f * (BigRat.new(k)^BigRat.new(v))
+    else
+      f = f * math.pow(k, v)
     end
+    -- print("["..i.."] "..factor[i].." | "..f)
   end
   return f
 end
@@ -105,7 +109,8 @@ local timer1 = os.clock()
 -- We can save some time on prime generation with some clever math
 -- We only need to check up to sqrt(num) (if we don't need factors)
 -- local primes = gen_primes(math.ceil(math.sqrt(num)))
-local primes = gen_primes(num)
+local primes = sieve_Eratosthenes(num)
+-- local primes = sieve_Sundaram(num) -- Slower, ~O(n^2)?
 timer1 = os.clock() - timer1
 
 print("Generated prime list to "..num.." in "..timer1.." seconds")
@@ -113,21 +118,19 @@ print("Generated prime list to "..num.." in "..timer1.." seconds")
 
 local timer2 = os.clock()
 local factors = {}
-for i=2,num do
-  if (not primes[i]) then
-    local f = factorize(i, primes)
-    -- print("["..i.."] "..ser.pack(f))
-    for j=2,i do
-      if f[j] then
-        factors[j] = factors[j] + f[j]
-      end
+table.insert(primes, num+1) -- Quick workaround, works well, not planning fixinig
+for i=2,#primes do
+  factors[primes[i-1]] = 1
+  for j=(primes[i-1]+1),(primes[i]-1) do
+    local f = factorize(j, primes)
+    -- print("["..j.."] "..ser.pack(f))
+    for k,v in pairs(f) do
+      factors[k] = factors[k] + v
     end
-  else
-    factors[i] = 1
   end
-  -- factors[num] = 1
 end
--- local factors = factorize(num, primes)
+table.remove(primes, #primes) -- Cleaning workaround, just in case
+
 timer2 = os.clock() - timer2
 
 print("Factorized from 2 to "..num.." in "..timer2.." seconds")
