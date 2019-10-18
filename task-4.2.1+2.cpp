@@ -11,6 +11,15 @@ struct Cell {
   int value = 0;
 };
 
+void ll_print(Cell* cell) {
+  // Cell* cell = list->begin();
+  while (cell->next != 0) {
+    cell = cell->next;
+    cout << cell->value << " ";
+  }
+  cout << endl;
+}
+
 class ll {
 private:
   Cell* cell;
@@ -132,31 +141,24 @@ void ll::inverse() {
   if (size < 2) {
     return;
   }
-  Cell* buffer = cell->next;
   Cell* previous = cell->next;
-  Cell* current = cell->next;
-  int i = 0;
-  while ( (current->next != 0) ) {
-    previous = current;
-    current = current->next;
-    i++;
-    buffer = current->next;
+  Cell* current = previous->next;
+  Cell* buffer = current->next;
+  previous->next = 0;
+  // Cell* next = cell;
+  while ( (current != 0) ) {
     current->next = previous;
-    previous->next = buffer;
+    previous = current;
+    current = buffer;
+    if (buffer != 0) {
+      buffer = current->next;
+    }
   }
+  cell->next = previous;
 }
 
 
 
-
-void ll_print(ll* list) {
-  Cell* cell = list->begin();
-  while (cell->next != 0) {
-    cell = cell->next;
-    cout << cell->value << " ";
-  }
-  cout << endl;
-}
 
 int main(int argc, char const *argv[]) {
 
@@ -169,20 +171,20 @@ int main(int argc, char const *argv[]) {
     list1.append(3);
     list1.append(4);
 
-    ll_print(&list1);
+    ll_print(list1.begin());
 
     list1.append(1, 0);
-    ll_print(&list1);
+    ll_print(list1.begin());
     list1.append(2, 0);
-    ll_print(&list1);
+    ll_print(list1.begin());
     list1.append(13, 1);
-    ll_print(&list1);
+    ll_print(list1.begin());
     list1.append(123123123, 4);
-    ll_print(&list1);
+    ll_print(list1.begin());
     list1.append(123123123, 5);
-    ll_print(&list1);
+    ll_print(list1.begin());
     list1.append(123123123, 7); // Out of bounds
-    ll_print(&list1);
+    ll_print(list1.begin());
 
     cout << list1.get(0) << endl;
     cout << list1.get(1) << endl;
@@ -194,20 +196,26 @@ int main(int argc, char const *argv[]) {
 
     for (size_t i = list1.length()-1; i > 0; i--) {
       cout << list1.remove(i) << endl;
-      ll_print(&list1);
+      ll_print(list1.begin());
     }
     cout << endl;
 
     list1.append(1, 0);
     list1.append(3);
-    ll_print(&list1);
+    ll_print(list1.begin());
     list1.remove(1);
-    ll_print(&list1);
+    ll_print(list1.begin());
 
+    cout << endl;
     list1.append(2, 1);
     list1.append(4);
+    list1.append(5);
+    list1.append(6);
+    ll_print(list1.begin());
     list1.inverse();
-    ll_print(&list1);
+    cout << endl;
+    ll_print(list1.begin());
+
 
   } catch (const char* msg) {
     cerr << msg << endl;
