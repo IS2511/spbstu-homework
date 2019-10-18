@@ -198,13 +198,9 @@ int main(int argc, char const *argv[]) {
 
     cout << "\n= Append (index) test\nShould be \"2 13 1 123 123123123 123123 123123123 3 4\"\n";
     list1.append(1, 0);
-    // ll_print(list1.begin());
     list1.append(2, 0);
-    // ll_print(list1.begin());
     list1.append(13, 1);
-    // ll_print(list1.begin());
     list1.append(123123123, 4);
-    // ll_print(list1.begin());
     list1.append(123123123, 7);
     ll_print(list1.begin());
 
