@@ -1,0 +1,2 @@
+# Ignore C++ binary files
+**/*.out
