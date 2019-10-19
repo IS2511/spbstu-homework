@@ -22,7 +22,7 @@ void ll_print(Cell* cell) {
 
 class ll {
 private:
-  Cell* cell;
+  Cell* _begin;
   unsigned int size = 0;
 
 public:
@@ -39,13 +39,12 @@ public:
 };
 
 
-
 ll::ll () {
-  cell = new Cell;
+  _begin = new Cell;
 }
 ll::~ll () {
-  Cell* previous = cell;
-  Cell* current = cell;
+  Cell* previous = _begin;
+  Cell* current = _begin;
   while (current->next != 0) {
     previous = current;
     current = current->next;
@@ -55,7 +54,7 @@ ll::~ll () {
   // delete &size;
 }
 Cell* ll::begin() {
-  return cell;
+  return _begin;
 }
 int ll::length() {
   return size;
@@ -67,8 +66,8 @@ int ll::append (int x, int k) {
     // throw range_error("ll: Out of bounds");
     // return NULL; // Error, out of bounds
   }
-  Cell* previous = cell;
-  Cell* current = cell;
+  Cell* previous = _begin;
+  Cell* current = _begin;
   Cell* new_cell = new Cell;
   new_cell->value = x;
   int i = -1;
@@ -84,7 +83,7 @@ int ll::append (int x, int k) {
   return i;
 }
 int ll::append (int x) {
-  Cell* current = cell;
+  Cell* current = _begin;
   Cell* new_cell = new Cell;
   new_cell->value = x;
   int i = -1;
@@ -103,8 +102,8 @@ int ll::get (int k) {
     // throw range_error("ll: Out of bounds");
     // return NULL; // Error, out of bounds
   }
-  Cell* previous = cell;
-  Cell* current = cell;
+  Cell* previous = _begin;
+  Cell* current = _begin;
   int i = -1;
   while ( (current->next != 0) && (i < k) ) {
     previous = current;
@@ -120,8 +119,8 @@ int ll::set (int k, int x) {
     // throw range_error("ll: Out of bounds");
     // return NULL; // Error, out of bounds
   }
-  Cell* previous = cell;
-  Cell* current = cell;
+  Cell* previous = _begin;
+  Cell* current = _begin;
   int i = -1;
   while ( (current->next != 0) && (i < k) ) {
     previous = current;
@@ -138,9 +137,9 @@ int ll::remove (int k) {
     // throw range_error("ll: Out of bounds");
     // return NULL; // Error, out of bounds
   }
-  Cell* previous = cell;
-  Cell* current = cell;
-  Cell* next = cell;
+  Cell* previous = _begin;
+  Cell* current = _begin;
+  Cell* next = _begin;
   int i = -1;
   while ( (current->next != 0) && (i < k) ) {
     previous = current;
@@ -159,7 +158,7 @@ void ll::inverse() {
   if (size < 2) {
     return;
   }
-  Cell* previous = cell->next;
+  Cell* previous = _begin->next;
   Cell* current = previous->next;
   Cell* buffer = current->next;
   previous->next = 0;
@@ -171,7 +170,7 @@ void ll::inverse() {
       buffer = current->next;
     }
   }
-  cell->next = previous;
+  _begin->next = previous;
 }
 
 
