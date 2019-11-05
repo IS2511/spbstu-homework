@@ -1,5 +1,5 @@
 
-local bit = require "bit"
+local bit = require "bit" -- LuaJIT bit operations library
 
 local arg_check = true
 local num1, num2 = 0, 0
